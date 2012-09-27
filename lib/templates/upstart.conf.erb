@@ -1,0 +1,61 @@
+## start on
+<% upstart_start_on.each do |key, val| %>
+start on <%= key %> <%= val %>
+<% end %>
+
+## stop on
+<% upstart_stop_on.each do |key, val| %>
+stop on <%= key %> <%= val %>
+<% end %>
+
+## env
+<% upstart_env.each do |key, val| %>
+env <%= "#{key}=#{val.to_s.dump}" %>
+<% end %>
+
+## export
+<% upstart_export.each do |key| %>
+export <%= key %>
+<% end %>
+
+## misc options
+<% upstart_options.each do |key, val| %>
+<%= val == true ? key : "#{key} #{val}" %>
+<% end %>
+
+## pre-start
+<% if fetch(:upstart_pre_start_script, nil) %>
+pre-start script
+<%= upstart_pre_start_script %>
+end script
+<% end %>
+
+## script
+<% if fetch(:upstart_exec, nil) %>
+exec <%= upstart_exec %>
+<% else %>
+script
+<%= upstart_script %>
+end script
+<% end %>
+
+## post-start
+<% if fetch(:upstart_post_start_script, nil) %>
+post-start script
+<%= upstart_post_start_script %>
+end script
+<% end %>
+
+## pre-stop
+<% if fetch(:upstart_pre_stop_script, nil) %>
+pre-stop script
+<%= upstart_pre_stop_script %>
+end script
+<% end %>
+
+## post-stop
+<% if fetch(:upstart_post_stop_script, nil) %>
+post-stop script
+<%= upstart_post_stop_script %>
+end script
+<% end %>
