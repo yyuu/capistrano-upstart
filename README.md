@@ -1,4 +1,4 @@
-# Capistrano::Upstart
+# capistrano-upstart
 
 a capistrano recipe to manage upstart service.
 
