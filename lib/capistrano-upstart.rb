@@ -43,7 +43,9 @@ module Capistrano
           _cset(:upstart_start_on, { :runlevel => "[2345]" })
           _cset(:upstart_stop_on, { :runlevel => "[016]" })
           _cset(:upstart_env, {})
-          _cset(:upstart_export, [])
+          _cset(:upstart_export) {
+            upstart_env.keys
+          }
           _cset(:upstart_script) {
             abort("You must specify either :upstart_exec or :upstart_script.")
           }
@@ -52,10 +54,10 @@ module Capistrano
           _cset(:upstart_console, 'none')
           _cset(:upstart_respawn, true)
           _cset(:upstart_options) {{
-            "author" => fetch(:upstart_author, '').to_s.dump,
+            "author" => fetch(:upstart_author, 'unknown').to_s.dump,
             "chdir" => upstart_chdir,
             "console" => upstart_console,
-            "description" => fetch(:upstart_description, '').to_s.dump,
+            "description" => fetch(:upstart_description, application).to_s.dump,
             "respawn" => upstart_respawn,
           }}
 

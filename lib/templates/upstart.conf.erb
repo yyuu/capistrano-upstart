@@ -1,61 +1,51 @@
 ## start on
-<% upstart_start_on.each do |key, val| %>
-start on <%= key %> <%= val %>
-<% end %>
+<%= upstart_start_on.map { |key, val| "start on #{key} #{val}" }.join("\n") %>
 
 ## stop on
-<% upstart_stop_on.each do |key, val| %>
-stop on <%= key %> <%= val %>
-<% end %>
+<%= upstart_stop_on.map { |key, val| "stop on #{key} #{val}" }.join("\n") %>
 
 ## env
-<% upstart_env.each do |key, val| %>
-env <%= "#{key}=#{val.to_s.dump}" %>
-<% end %>
+<%= upstart_env.map { |key, val| "env #{key}=#{val.to_s.dump}" }.join("\n") %>
 
 ## export
-<% upstart_export.each do |key| %>
-export <%= key %>
-<% end %>
+<%= upstart_export.map { |key| "export #{key}" }.join("\n") %>
 
 ## misc options
-<% upstart_options.each do |key, val| %>
-<%= val == true ? key : "#{key} #{val}" %>
-<% end %>
+<%= upstart_options.map { |key, val| val == true ? key : "#{key} #{val}" }.join("\n") %>
 
 ## pre-start
 <% if fetch(:upstart_pre_start_script, nil) %>
 pre-start script
-<%= upstart_pre_start_script %>
+<%= upstart_pre_start_script.chomp %>
 end script
 <% end %>
 
 ## script
 <% if fetch(:upstart_exec, nil) %>
-exec <%= upstart_exec %>
+exec <%= upstart_exec.chomp %>
 <% else %>
 script
-<%= upstart_script %>
+<%= upstart_script.chomp %>
 end script
 <% end %>
 
 ## post-start
 <% if fetch(:upstart_post_start_script, nil) %>
 post-start script
-<%= upstart_post_start_script %>
+<%= upstart_post_start_script.chomp %>
 end script
 <% end %>
 
 ## pre-stop
 <% if fetch(:upstart_pre_stop_script, nil) %>
 pre-stop script
-<%= upstart_pre_stop_script %>
+<%= upstart_pre_stop_script.chomp %>
 end script
 <% end %>
 
 ## post-stop
 <% if fetch(:upstart_post_stop_script, nil) %>
 post-stop script
-<%= upstart_post_stop_script %>
+<%= upstart_post_stop_script.chomp %>
 end script
 <% end %>
