@@ -70,7 +70,7 @@ module Capistrano
           after 'deploy:setup', 'upstart:setup'
 
           task(:configure, :roles => :app, :except => { :no_release => true }) {
-            tempfile = capture("mktemp").chomp
+            tempfile = capture("t=$(mktemp /tmp/capistrano-upstart.XXXXXXXXXX;rm -f $t;echo $t").chomp
             begin
               template = upstart_template_files.map { |f| File.join(upstart_template_source_path, f) }.find { |t| File.file?(t) }
               unless template
