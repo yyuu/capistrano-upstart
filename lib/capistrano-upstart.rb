@@ -1,5 +1,7 @@
 require "capistrano-upstart/version"
-require 'erb'
+require "capistrano/configuration/actions/file_transfer_ext"
+require "capistrano/configuration/resources/file_resources"
+require "erb"
 
 module Capistrano
   module Upstart
@@ -27,9 +29,7 @@ module Capistrano
           _cset(:upstart_template_files) {
             [
               "#{upstart_service_name}.conf",
-              "#{upstart_service_name}.conf.erb",
               "upstart.conf",
-              "upstart.conf.erb",
             ]
           }
 
@@ -70,22 +70,11 @@ module Capistrano
           after 'deploy:setup', 'upstart:setup'
 
           task(:configure, :roles => :app, :except => { :no_release => true }) {
-            tempfile = capture("t=$(mktemp /tmp/capistrano-upstart.XXXXXXXXXX;rm -f $t;echo $t").chomp
-            begin
-              template = upstart_template_files.map { |f| File.join(upstart_template_source_path, f) }.find { |t| File.file?(t) }
-              unless template
-                abort("could not find template for upstart configuration file for `#{upstart_service_name}'.")
-              end
-              case File.extname(template)
-              when '.erb'
-                put(ERB.new(File.read(template)).result(binding), tempfile)
-              else
-                put(File.read(template), tempfile)
-              end
-              run("diff -u #{upstart_service_file} #{tempfile} || #{sudo} mv -f #{tempfile} #{upstart_service_file}")
-            ensure
-              run("rm -f #{tempfile}")
-            end
+            t = upstart_template_files.find { |f|
+              File.file?(File.join(upstart_template_source_path, "#{f}.erb")) or File.file?(File.join(upstart_template_source_path, f))
+            }
+            abort("could not find template for upstart configuration file for `#{upstart_service_name}'.") unless t
+            safe_put(template(t, :path => upstart_template_source_path), upstart_service_file, :place => :if_modified, :sudo => true)
           }
 
           desc("Start upstart service.")
