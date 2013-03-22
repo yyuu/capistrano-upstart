@@ -84,27 +84,27 @@ module Capistrano
 
           desc("Start upstart service.")
           task(:start, :roles => :app, :except => { :no_release => true }) {
-            run("#{sudo} service #{upstart_service_name.dump} start")
+            run("#{sudo} start #{upstart_service_name.dump}")
           }
 
           desc("Stop upstart service.")
           task(:stop, :roles => :app, :except => { :no_release => true }) {
-            run("#{sudo} service #{upstart_service_name.dump} stop")
+            run("#{sudo} stop #{upstart_service_name.dump}")
           }
 
           desc("Restart upstart service.")
           task(:restart, :roles => :app, :except => { :no_release => true }) {
-            run("#{sudo} service #{upstart_service_name.dump} restart || #{sudo} service #{upstart_service_name.dump} start")
+            run("#{sudo} restart #{upstart_service_name.dump} || #{sudo} start #{upstart_service_name.dump}")
           }
 
           desc("Reload upstart service.")
           task(:reload, :roles => :app, :except => { :no_release => true }) {
-            run("#{sudo} service #{upstart_service_name.dump} reload || #{sudo} service #{upstart_service_name.dump} start")
+            run("#{sudo} reload #{upstart_service_name.dump} || #{sudo} start #{upstart_service_name.dump}")
           }
 
           desc("Show upstart service status.")
           task(:status, :roles => :app, :except => { :no_release => true }) {
-            run("#{sudo} service #{upstart_service_name.dump} status")
+            run("#{sudo} status #{upstart_service_name.dump}")
           }
         }
       }
