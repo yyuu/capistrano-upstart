@@ -68,6 +68,10 @@ module Capistrano
           }
           after "deploy:setup", "upstart:setup"
 
+          _cset(:upstart_default_configure_options) {{
+            :install => :if_modified, :run_method => :sudo,
+            :owner => "root", :group => "root", :mode => "644",
+          }}
           task(:configure, :roles => :app, :except => { :no_release => true }) {
             t = upstart_template_files.find { |f|
               File.file?(File.join(upstart_template_source_path, "#{f}.erb")) or File.file?(File.join(upstart_template_source_path, f))
@@ -75,7 +79,7 @@ module Capistrano
             abort("Could not find template for upstart configuration file for `#{upstart_service_name}'.") unless t
             safe_put(template(t, :path => upstart_template_source_path),
                      upstart_service_file,
-                     {:install => :if_modified, :sudo => true}.merge(fetch(:upstart_configure_options, {})))
+                     upstart_default_configure_options.merge(fetch(:upstart_configure_options, {})))
           }
 
           desc("Start upstart service.")
