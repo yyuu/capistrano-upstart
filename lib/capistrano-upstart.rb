@@ -73,8 +73,10 @@ module Capistrano
             t = upstart_template_files.find { |f|
               File.file?(File.join(upstart_template_source_path, "#{f}.erb")) or File.file?(File.join(upstart_template_source_path, f))
             }
-            abort("could not find template for upstart configuration file for `#{upstart_service_name}'.") unless t
-            safe_put(template(t, :path => upstart_template_source_path), upstart_service_file, :place => :if_modified, :sudo => true)
+            abort("Could not find template for upstart configuration file for `#{upstart_service_name}'.") unless t
+            safe_put(template(t, :path => upstart_template_source_path),
+                     upstart_service_file,
+                     {:install => :if_modified, :sudo => true}.merge(fetch(:upstart_configure_options, {})))
           }
 
           desc("Start upstart service.")
