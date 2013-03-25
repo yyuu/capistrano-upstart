@@ -21,9 +21,10 @@ Or install it yourself as:
 This recipes will try to set up Upstart service after `deploy:setup` tasks.
 To enable this recipe for your application,  add following in you `config/deploy.rb`.
 
-    # in "config/deploy.rb"
-    require 'capistrano-upstart'
-    set(:upstart_script, <<-EOS)
+    # config/deploy.rb
+    require "capistrano-upstart"
+    set :upstart_service_name, "hello"
+    set :upstart_script, <<-EOS
       exec echo "hello, world"
     EOS
 
