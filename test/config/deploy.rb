@@ -79,7 +79,7 @@ task(:test_all) {
   find_and_execute_task("test_default")
 }
 
-on(:start) {
+on(:load) {
   run("rm -rf #{deploy_to.dump}")
 }
 
