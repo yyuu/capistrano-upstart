@@ -17,7 +17,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.add_dependency("capistrano")
+  gem.add_dependency("capistrano", "< 3")
   gem.add_dependency("capistrano-file-resources", ">= 0.1.0")
   gem.add_dependency("capistrano-file-transfer-ext", ">= 0.1.1")
 end
